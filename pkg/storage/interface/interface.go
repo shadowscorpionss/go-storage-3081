@@ -11,7 +11,7 @@ type Task struct {
 	Content    string
 }
 
-type Interface interface {
+type DbInterface interface {
 	Tasks (int, int) ([]Task, error)
 	NewTask(Task) (int, error)
 }

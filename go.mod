@@ -1,4 +1,4 @@
-module github.com/shadowscorpionss/go-storage-3081
+module gostorage3081
 
 go 1.20
 
