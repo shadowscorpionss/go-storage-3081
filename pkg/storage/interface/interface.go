@@ -12,6 +12,6 @@ type Task struct {
 }
 
 type DbInterface interface {
-	Tasks (int, int) ([]Task, error)
+	Tasks (taskID, authorID int) ([]Task, error)
 	NewTask(Task) (int, error)
 }
