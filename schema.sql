@@ -22,7 +22,7 @@ CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     opened BIGINT NOT NULL DEFAULT extract(epoch from now()), -- время создания задачи
     closed BIGINT DEFAULT 0, -- время выполнения задачи
-    author_id INTEGER REFERENCES users(id) DEFAULT 0, - автор задачи
+    author_id INTEGER REFERENCES users(id) DEFAULT 0, -- автор задачи
     assigned_id INTEGER REFERENCES users(id) DEFAULT 0, -- ответственный
     title TEXT, -- название задачи
     content TEXT -- задачи
