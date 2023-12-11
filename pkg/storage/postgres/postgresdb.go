@@ -2,8 +2,10 @@ package postgresdb
 
 import (
 	"context"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"errors"
 	"gostorage3081/pkg/storage/interface"
+
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 // Хранилище данных.
@@ -82,4 +84,43 @@ func (s *Storage) NewTask(t storage.Task) (int, error) {
 		t.Content,
 	).Scan(&id)
 	return id, err
+}
+
+func (s *Storage) EditTask(t storage.Task) (int, error) {
+	if t.ID == 0 {
+		return 0, errors.New("ID is not set")
+	}
+	//update not empty and not 0 fields
+	res, err := s.db.Exec(context.Background(), `
+		UPDATE tasks SET
+		opened=COALESCE(NULLIF($2,0), opened),
+		closed=COALESCE(NULLIF($3,0), closed),
+		author_id=COALESCE(NULLIF($4,0), author_id),
+		assigned_id=COALESCE(NULLIF($5,0), assigned_id),
+		title=COALESCE(NULLIF($6,''), title),
+		content=COALESCE(NULLIF($7,''), content)
+		WHERE id=$1 
+		`,
+		t.ID,
+		t.Opened,
+		t.Closed,
+		t.AuthorID,
+		t.AssignedID,
+		t.Title,
+		t.Content,
+	)
+	return int(res.RowsAffected()), err
+}
+
+func (s *Storage) DeleteTask(taskID int) (int, error) {
+	if taskID == 0 {
+		return 0, errors.New("taskID is not set")
+	}
+	res, err := s.db.Exec(context.Background(), `
+	DELETE FROM tasks
+	WHERE id=$1
+	`,
+		taskID,
+	)
+	return int(res.RowsAffected()), err
 }

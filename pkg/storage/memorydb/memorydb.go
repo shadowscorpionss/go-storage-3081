@@ -9,5 +9,13 @@ func (db DB) Tasks (int, int) ([]storage.Task, error ){
 }
 
 func (db DB) NewTask( storage.Task) (int, error){
-	return 0, nil
+	return 1, nil
+}
+
+func (db DB) EditTask (storage.Task) (int, error){
+	return 1,nil
+}
+
+func (db DB) DeleteTask(int) (int, error){
+	return 1, nil
 }
